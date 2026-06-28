@@ -12,9 +12,9 @@ export class ProductsController {
     return this.products.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.products.findOne(id);
+  @Get(':idOrSlug')
+  findOne(@Param('idOrSlug') idOrSlug: string) {
+    return this.products.findOne(idOrSlug);
   }
 
   // Used by the (future) admin dashboard to add products.

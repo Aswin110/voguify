@@ -96,7 +96,7 @@ function ProductCard({ product }: { product: Product }) {
     .join(' · ');
 
   return (
-    <div className="group">
+    <Link href={`/products/${product.slug}`} className="group block">
       <div className="relative flex aspect-square items-center justify-center overflow-hidden rounded-lg bg-[#e0ded5] text-7xl">
         {product.imageUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -109,13 +109,9 @@ function ProductCard({ product }: { product: Product }) {
           <span aria-hidden>{emoji}</span>
         )}
 
-        <button
-          type="button"
-          aria-label="Add to favorites"
-          className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-md bg-white/90 text-black shadow-sm transition hover:bg-white"
-        >
+        <span className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-md bg-white/90 text-black shadow-sm transition group-hover:bg-white">
           <Heart className="h-4 w-4" />
-        </button>
+        </span>
 
         {product.bestseller && (
           <span className="absolute bottom-3 left-3 rounded-md bg-[#f7cda0] px-2.5 py-1 text-xs font-semibold text-[#6b4423]">
@@ -139,7 +135,7 @@ function ProductCard({ product }: { product: Product }) {
         )}
         {meta && <p className="mt-1 text-sm text-black/45">{meta}</p>}
       </div>
-    </div>
+    </Link>
   );
 }
 

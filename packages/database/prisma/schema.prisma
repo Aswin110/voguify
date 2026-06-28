@@ -20,6 +20,7 @@ model Product {
   name        String
   slug        String   @unique
   description String?
+  highlights  String[] @default([])
   priceCents  Int      @default(0)
   premiumCents   Int?
   imageUrl    String?

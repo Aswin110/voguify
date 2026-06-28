@@ -14,8 +14,10 @@ export class ProductsService {
     });
   }
 
-  findOne(id: string) {
-    return this.prisma.product.findUnique({ where: { id } });
+  findOne(idOrSlug: string) {
+    return this.prisma.product.findFirst({
+      where: { OR: [{ id: idOrSlug }, { slug: idOrSlug }] },
+    });
   }
 
   create(data: Prisma.ProductCreateInput) {
