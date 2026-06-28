@@ -27,10 +27,8 @@ import { prisma, PrismaClient, type User } from '@voguify/database';
 # 1. install all workspace dependencies
 pnpm install
 
-# 2. configure environment (two files use DATABASE_URL)
-cp packages/database/.env.example packages/database/.env   # Prisma CLI
-cp apps/server/.env.example apps/server/.env               # server runtime
-cp apps/client/.env.example apps/client/.env.local         # client → API URL
+# 2. configure environment (one shared file at the repo root)
+cp .env.example .env
 
 # 3. start postgres (requires Docker) — or point DATABASE_URL at your own DB
 pnpm db:up
@@ -45,6 +43,18 @@ pnpm dev
 
 - Client → http://localhost:3000
 - Server → http://localhost:4000/api (health check at `/api/health`)
+
+## Environment
+
+There is a **single `.env` at the repo root**, shared by everything:
+
+- **server** — `ConfigModule` loads `../../.env` (`apps/server/src/app.module.ts`).
+- **Prisma** — CLI commands run through `dotenv-cli` (`dotenv -e ../../.env -- ...`).
+- **client** — `next.config.mjs` loads `../../.env` and exposes `NEXT_PUBLIC_*` vars
+  (Next.js doesn't auto-read env files outside its own folder).
+
+Only `NEXT_PUBLIC_*` variables reach the browser bundle; `DATABASE_URL` stays
+server-side. `.env` is gitignored — commit changes to `.env.example` instead.
 
 ## How the shared Prisma package works
 

@@ -5,7 +5,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), PrismaModule],
+  imports: [
+    // Load the shared root .env (server runs with cwd = apps/server).
+    ConfigModule.forRoot({ isGlobal: true, envFilePath: ['../../.env'] }),
+    PrismaModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
