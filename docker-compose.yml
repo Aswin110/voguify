@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: voguify-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: voguify
+      POSTGRES_PASSWORD: voguify
+      POSTGRES_DB: voguify
+    ports:
+      - '5432:5432'
+    volumes:
+      - voguify-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U voguify -d voguify']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  voguify-pgdata:

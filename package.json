@@ -1,0 +1,31 @@
+{
+  "name": "voguify",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Voguify monorepo — Next.js client + NestJS server + shared Prisma/PostgreSQL package",
+  "packageManager": "pnpm@10.20.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @voguify/database build && pnpm --parallel --filter @voguify/server --filter @voguify/client dev",
+    "dev:client": "pnpm --filter @voguify/client dev",
+    "dev:server": "pnpm --filter @voguify/server dev",
+    "build": "pnpm -r build",
+    "build:client": "pnpm --filter @voguify/client build",
+    "build:server": "pnpm --filter @voguify/server build",
+    "db:build": "pnpm --filter @voguify/database build",
+    "db:generate": "pnpm --filter @voguify/database prisma:generate",
+    "db:migrate": "pnpm --filter @voguify/database prisma:migrate",
+    "db:deploy": "pnpm --filter @voguify/database prisma:deploy",
+    "db:studio": "pnpm --filter @voguify/database prisma:studio",
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "pnpm": {
+    "onlyBuiltDependencies": ["@prisma/client", "@prisma/engines", "prisma", "sharp"]
+  }
+}
