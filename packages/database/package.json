@@ -17,7 +17,8 @@
     "prisma:migrate": "dotenv -e ../../.env -- prisma migrate dev",
     "prisma:deploy": "dotenv -e ../../.env -- prisma migrate deploy",
     "prisma:reset": "dotenv -e ../../.env -- prisma migrate reset",
-    "prisma:studio": "dotenv -e ../../.env -- prisma studio"
+    "prisma:studio": "dotenv -e ../../.env -- prisma studio",
+    "prisma:seed": "dotenv -e ../../.env -- tsx prisma/seed.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.1.0"
@@ -26,6 +27,7 @@
     "@types/node": "^22.10.0",
     "dotenv-cli": "^8.0.0",
     "prisma": "^6.1.0",
+    "tsx": "^4.19.0",
     "typescript": "^5.7.0"
   }
 }
