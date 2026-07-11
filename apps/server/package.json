@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "kill-port 4000 && nest start --watch",
+    "predev": "kill-port 4000",
+    "dev": "nest start --watch",
     "build": "nest build",
     "start": "node dist/main.js",
     "start:prod": "node dist/main.js"
