@@ -7,12 +7,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  USER
+  ADMIN
+}
+
 model User {
   id            String    @id @default(cuid())
   email         String    @unique
   name          String?
   emailVerified DateTime?
   image         String?
+  role          Role      @default(USER)
   accounts      Account[]
   sessions      Session[]
   createdAt     DateTime  @default(now())
@@ -69,6 +75,7 @@ model Product {
   priceCents  Int      @default(0)
   premiumCents   Int?
   imageUrl    String?
+  images      String[] @default([]) // full ordered gallery; images[0] is the main image (mirrors imageUrl)
   brand       String?
   styleNo     String?
   category    String?

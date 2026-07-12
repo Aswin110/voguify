@@ -1,8 +1,8 @@
-import NextAuth from 'next-auth';
-import Google from 'next-auth/providers/google';
-import Resend from 'next-auth/providers/resend';
-import { PrismaAdapter } from '@auth/prisma-adapter';
-import { prisma } from '@voguify/database';
+import NextAuth from "next-auth";
+import Google from "next-auth/providers/google";
+import Resend from "next-auth/providers/resend";
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import { prisma, type Role } from "@voguify/database";
 
 /**
  * Central Auth.js (NextAuth v5) configuration.
@@ -28,12 +28,23 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       allowDangerousEmailAccountLinking: true,
     }),
     Resend({
-      from: process.env.AUTH_EMAIL_FROM ?? 'onboarding@resend.dev',
+      from: process.env.AUTH_EMAIL_FROM ?? "onboarding@resend.dev",
     }),
   ],
   pages: {
     // Use our own branded pages instead of the default Auth.js screens.
-    signIn: '/login',
-    verifyRequest: '/login/verify',
+    signIn: "/login",
+    verifyRequest: "/login/verify",
+  },
+  callbacks: {
+    // With the database session strategy, `user` is the full row from Postgres.
+    // Surface the id and role on `session.user` so server components / route
+    // handlers can gate admin features with `session.user.role === 'ADMIN'`.
+    session({ session, user }) {
+      session.user.id = user.id;
+      // `role` is on our DB row but not on Auth.js's base AdapterUser type.
+      session.user.role = (user as typeof user & { role: Role }).role;
+      return session;
+    },
   },
 });

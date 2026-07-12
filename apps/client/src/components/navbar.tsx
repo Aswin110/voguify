@@ -4,8 +4,8 @@ import { ChevronDown } from 'lucide-react';
 import { auth, signOut } from '@/auth';
 import { Button } from '@/components/ui/button';
 
-const NAV_ITEMS: { label: string; hasMenu: boolean }[] = [
-  { label: 'Catalog', hasMenu: false },
+const NAV_ITEMS: { label: string; hasMenu: boolean; href?: string }[] = [
+  { label: 'Catalog', hasMenu: false, href: '/products' },
   { label: 'Pricing', hasMenu: false },
   { label: 'How it works', hasMenu: true },
   { label: 'Solutions', hasMenu: true },
@@ -26,20 +26,40 @@ export async function Navbar() {
         </Link>
 
         <nav className="hidden items-center gap-6 text-sm font-semibold lg:flex">
-          {NAV_ITEMS.map((item) => (
-            <button
-              key={item.label}
-              className="flex items-center gap-1 text-[#1c1b18]/90 transition hover:text-black"
-            >
-              {item.label}
-              {item.hasMenu && <ChevronDown className="h-3.5 w-3.5" />}
-            </button>
-          ))}
+          {NAV_ITEMS.map((item) =>
+            item.href ? (
+              <Link
+                key={item.label}
+                href={item.href}
+                className="flex items-center gap-1 text-[#1c1b18]/90 transition hover:text-black"
+              >
+                {item.label}
+                {item.hasMenu && <ChevronDown className="h-3.5 w-3.5" />}
+              </Link>
+            ) : (
+              <button
+                key={item.label}
+                className="flex items-center gap-1 text-[#1c1b18]/90 transition hover:text-black"
+              >
+                {item.label}
+                {item.hasMenu && <ChevronDown className="h-3.5 w-3.5" />}
+              </button>
+            ),
+          )}
         </nav>
 
         <div className="ml-auto flex items-center gap-3">
           {user ? (
             <>
+              {user.role === 'ADMIN' && (
+                <Button
+                  asChild
+                  variant="ghost"
+                  className="rounded-lg px-3 font-bold"
+                >
+                  <Link href="/admin">Admin</Link>
+                </Button>
+              )}
               <span className="hidden text-sm font-semibold text-black/70 sm:inline">
                 {user.name ?? user.email}
               </span>

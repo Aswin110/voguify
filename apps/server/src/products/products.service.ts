@@ -7,9 +7,10 @@ import { PrismaService } from '../prisma/prisma.service';
 export class ProductsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  findAll() {
+  /** Public catalog: published only. Admin passes includeUnpublished=true. */
+  findAll(includeUnpublished = false) {
     return this.prisma.product.findMany({
-      where: { published: true },
+      where: includeUnpublished ? undefined : { published: true },
       orderBy: { createdAt: 'desc' },
     });
   }
@@ -22,5 +23,13 @@ export class ProductsService {
 
   create(data: Prisma.ProductCreateInput) {
     return this.prisma.product.create({ data });
+  }
+
+  update(id: string, data: Prisma.ProductUpdateInput) {
+    return this.prisma.product.update({ where: { id }, data });
+  }
+
+  remove(id: string) {
+    return this.prisma.product.delete({ where: { id } });
   }
 }

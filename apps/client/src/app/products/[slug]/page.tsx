@@ -1,11 +1,11 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { Check, ChevronLeft, ChevronRight, Heart } from 'lucide-react';
+import { Check } from 'lucide-react';
 
 import { Navbar } from '@/components/navbar';
 import { Button } from '@/components/ui/button';
 import { DecorationMethod } from '@/components/decoration-method';
-import { cn } from '@/lib/utils';
+import { ProductGallery } from '@/components/product-gallery';
 
 type Product = {
   id: string;
@@ -16,6 +16,7 @@ type Product = {
   priceCents: number;
   premiumCents: number | null;
   imageUrl: string | null;
+  images: string[];
   brand: string | null;
   styleNo: string | null;
   category: string | null;
@@ -76,67 +77,26 @@ export default async function ProductDetailPage({
     (product.category && CATEGORY_LABEL[product.category]) || 'Products';
   const choiceCents = product.premiumCents ?? product.priceCents;
 
+  // Prefer the full gallery; fall back to the single imageUrl for older products.
+  const galleryImages =
+    product.images?.length > 0
+      ? product.images
+      : product.imageUrl
+        ? [product.imageUrl]
+        : [];
+
   return (
     <div className="min-h-screen bg-white text-[#1c1b18]">
       <Navbar />
       <main className="mx-auto max-w-7xl px-6 py-10">
         <div className="grid gap-10 lg:grid-cols-2 lg:gap-14">
           {/* ---------- Gallery ---------- */}
-          <div>
-            <div className="relative flex aspect-[4/5] items-center justify-center overflow-hidden rounded-xl bg-[#cfccc2] text-[9rem]">
-              {product.imageUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={product.imageUrl}
-                  alt={product.name}
-                  className="h-full w-full object-cover"
-                />
-              ) : (
-                <span aria-hidden>{emoji}</span>
-              )}
-
-              <span className="absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-md bg-white text-black shadow-sm">
-                <Heart className="h-4 w-4" />
-              </span>
-
-              {product.bestseller && (
-                <span className="absolute bottom-4 left-4 rounded-md bg-[#f7cda0] px-2.5 py-1 text-xs font-semibold text-[#6b4423]">
-                  Bestseller
-                </span>
-              )}
-            </div>
-
-            {/* thumbnail strip (placeholders) */}
-            <div className="mt-4 flex items-center gap-2">
-              <button
-                type="button"
-                aria-label="Previous"
-                className="grid h-9 w-9 shrink-0 place-items-center rounded-md border border-black/15 text-black/60 hover:bg-black/5"
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </button>
-              <div className="flex gap-2">
-                {Array.from({ length: 4 }).map((_, i) => (
-                  <div
-                    key={i}
-                    className={cn(
-                      'grid h-16 w-16 place-items-center rounded-md bg-[#e0ded5] text-2xl',
-                      i === 0 && 'ring-2 ring-[#4b4a40]',
-                    )}
-                  >
-                    <span aria-hidden>{emoji}</span>
-                  </div>
-                ))}
-              </div>
-              <button
-                type="button"
-                aria-label="Next"
-                className="grid h-9 w-9 shrink-0 place-items-center rounded-md border border-black/15 text-black/60 hover:bg-black/5"
-              >
-                <ChevronRight className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
+          <ProductGallery
+            images={galleryImages}
+            emoji={emoji}
+            name={product.name}
+            bestseller={product.bestseller}
+          />
 
           {/* ---------- Details ---------- */}
           <div>
